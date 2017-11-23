@@ -5,6 +5,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:true}));
 var fs = require("fs");
 var mongojs = require('mongojs');
+var mqtt = require('mqtt')
+var client  = mqtt.connect('mqtt://iot.eclipse.org')
 
 
 var db = mongojs("mongodb://badhon:123456@ds255265.mlab.com:55265/badhon",['alu']);
@@ -39,4 +41,25 @@ app.get('/Sound', (req, res)=> {
       console.log("listening to 3000 port");
     });
 
+    // client.on('connect', function () {
+    //   client.subscribe('alu')
+    //   client.publish('alu', 'Hello mqtt')
+    // })
+     
+    // client.on('message', function (alu, message) {
+    //   // message is Buffer
+    //   console.log(message.toString())
+    //   client.end()
+    // })
+
+
+    client.on('connect', function () {
+      client.subscribe("alu")
+      // client.publish('shimul-iot', 'Conversation started with Shimul-Server')
+  })
+  
+  client.on("message", function (topic, message) {
+      var data = JSON.parse(message);
+      db.alu.save(data);
+  })
  
