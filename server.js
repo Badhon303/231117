@@ -24,15 +24,19 @@ app.get('/Sound', (req, res)=> {
   res.send("Hi Sound.... !!");
 });
 
-
-app.listen(3000,()=>{
-    console.log("listening to 3000 port");
-  });
-
-
   app.get('/', (req, res)=> {
     db.alu.find((err,docs)=>{
       res.send(docs) ;
     })
-  }); 
-  
+  });
+  app.post('/post', function(req, res){
+    db.alu.save(req.body);
+    console.log("post data"); 
+    res.json(req.body);
+    })
+
+    app.listen(3000,()=>{
+      console.log("listening to 3000 port");
+    });
+
+ 
